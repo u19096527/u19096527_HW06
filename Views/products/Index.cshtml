@@ -68,8 +68,8 @@
             </td>
             <td>
                 <button class="btn btn-primary" onclick="editSelectedProductInfo(@item.product_id)"> Edit</button>
-                <button class="btn btn-info"> Details</button>
-                <button class="btn btn-danger"> Delete</button>
+                <button class="btn btn-info" onclick="displaySelectedProductInfo(@item.product_id)"> Details</button>
+                <button class="btn btn-danger" onclick="deleteSelectedProduct(@item.product_id)"> Delete</button>
             </td>
         </tr>
     }
@@ -376,7 +376,7 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 
         function displaySelectedProductInfo(productId) {
             $.ajax({
-                url: '/Products/Details/',
+                url: '/Products/Details',
                 type: "GET",
                 dataType: "json",
                 contentType: "application/json; charset=utf-8",
@@ -415,6 +415,7 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 
 
                     $('#modalDisplayDetails').modal('show');
+                    
                 },
                 error: function (error) {
                     console.log(error);
@@ -423,6 +424,6 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
             //----------------------------------------------------
         };
 
-        function DeleteSelectedProduct() { };
+        function deleteSelectedProduct() { };
     </script>
 }
