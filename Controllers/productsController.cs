@@ -103,19 +103,25 @@ namespace u19096527_HW06.Controllers
         }
 
         // POST: products/Edit/5
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "product_id,product_name,brand_id,category_id,model_year,list_price")] product product)
+        public JsonResult Edit([Bind(Include = "product_id,product_name,brand_id,category_id,model_year,list_price")] product product)
         {
-            if (ModelState.IsValid)
+            var message = "";
+            try
             {
-                db.Entry(product).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(product).State = EntityState.Modified;
+                    db.SaveChanges();
+                    message = "SUCCESS";
+                }
             }
-            ViewBag.brand_id = new SelectList(db.brands, "brand_id", "brand_name", product.brand_id);
-            ViewBag.category_id = new SelectList(db.categories, "category_id", "category_name", product.category_id);
-            return View(product);
+            catch (Exception err)
+            {
+                message = err.Message;
+            }
+            return new JsonResult { Data = new { status = message }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         // GET: products/Delete/5
