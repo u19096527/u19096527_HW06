@@ -16,8 +16,19 @@ namespace u19096527_HW06.Controllers
         private BikeStoresEntities db = new BikeStoresEntities();
 
         // GET: products
-        public ActionResult Index(string searchString)
+        public ActionResult Index(string currentFilter, string searchString, int? page)
         {
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
             var products = db.products.Include(p => p.brand).Include(p => p.category);
 
             if (!String.IsNullOrEmpty(searchString))
@@ -25,7 +36,10 @@ namespace u19096527_HW06.Controllers
                 products = products.Where( p => p.product_name.Contains(searchString) );
             }
 
-            return View(products.ToList());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+
+            return View(products.ToList().ToPagedList(pageNumber, pageSize));
         }
 
         // GET: products/Details/5
