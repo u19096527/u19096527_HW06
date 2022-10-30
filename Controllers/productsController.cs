@@ -85,20 +85,21 @@ namespace u19096527_HW06.Controllers
         }
 
         // GET: products/Edit/5
-        public ActionResult Edit(int? id)
+        public JsonResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             product product = db.products.Find(id);
-            if (product == null)
+            var SerializedProduct = new product
             {
-                return HttpNotFound();
-            }
-            ViewBag.brand_id = new SelectList(db.brands, "brand_id", "brand_name", product.brand_id);
-            ViewBag.category_id = new SelectList(db.categories, "category_id", "category_name", product.category_id);
-            return View(product);
+                product_id = product.product_id,
+                product_name = product.product_name,
+                category_id = product.category_id,
+                brand_id = product.brand_id,
+                list_price = product.list_price,
+                model_year = product.model_year,
+                brands = db.brands.ToList().Select(x => new brand { brand_id = x.brand_id, brand_name = x.brand_name }).ToList(),
+                categories = db.categories.ToList().Select(x => new category { category_id = x.category_id, category_name = x.category_name }).ToList()
+            };
+            return new JsonResult { Data = new { product = SerializedProduct }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         // POST: products/Edit/5

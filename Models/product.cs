@@ -27,12 +27,13 @@ namespace u19096527_HW06.Models
         public int category_id { get; set; }
         public short model_year { get; set; }
         public decimal list_price { get; set; }
-    
         public virtual brand brand { get; set; }
         public virtual category category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<order_items> order_items { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<stock> stocks { get; set; }
+        public List<brand> brands { get; set; }
+        public List<category> categories { get; set; }
     }
 }

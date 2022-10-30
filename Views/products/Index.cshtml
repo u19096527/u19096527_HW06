@@ -68,9 +68,9 @@
                 @Html.DisplayFor(modelItem => item.category.category_name)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.product_id }, new { @class = "btn btn-primary" }) |
-                @Html.ActionLink("Details", "Details", new { id = item.product_id }, new { @class = "btn btn-info" }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.product_id }, new { @class = "btn btn-danger" })
+                <button class="btn btn-primary" onclick="editSelectedProduct(@item.product_id)"> Edit</button>
+                <button class="btn btn-info"> Details</button>
+                <button class="btn btn-danger"> Delete</button>
             </td>
         </tr>
     }
@@ -78,7 +78,160 @@
 
 <br />
 
+<!-- PAGINATION -->
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
 @Html.PagedListPager(Model, page => Url.Action("Index",
     new { page, currentFilter = ViewBag.CurrentFilter }))
+
+<!-- MODAL SECTION -->
+<!-- MODAL : EDIT PRODUCT --> 
+<div class="modal fade" id="modalEditProduct" tabindex="-1" role="dialog" aria-labelledby="modalLabelEditProduct" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitleEditProduct"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12" style="width: 72% !important;">
+                            <div class="form-horizontal ">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2"> Name </label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <input placeholder="Product Name" type="text" class="form-control" id="editProduct_Name" />
+                                        <span id="nameRequired" hidden class="text-danger"> PLEASE FILL IN THE PRODUCT NAME ! </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2"> Brand </label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="editProduct_Brand"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2"> Category </label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="editProduct_Category"></select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Year</label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <input placeholder="2022" type="text" class="form-control" id="editProduct_Year" />
+                                        <span id="yearInvalid" hidden class="text-danger"> MODEL YEAR ENTERED IS INVALID! </span>
+                                        <span id="yearRequired" hidden class="text-danger"> PLEASE FILL IN THE MODEL YEAR ! </span>
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">List Price</label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <input placeholder="2500" type="text" class="form-control" id="editProduct_Price" />
+                                        <span id="priceInvalid" hidden class="text-danger"> PRICE ENTERED IS INVALID ! </span>
+                                        <span id="priceRequired" hidden class="text-danger">PLEASE FILL IN THE LIST PRICE ! </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="postProductEdit()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL : DISPLAY PRODUCT DETAILS -->
+<!-- SCRIPT SECTION -->
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+        });
+
+        function editSelectedProduct(productId) {
+
+        };
+
+        var iSelectedProductID = 0;
+        function getProductEdit(productId) {
+            iSelectedProductID = 0;
+            iSelectedProductID = productId;
+
+            //AJAX - GET DATA FROM JSON RESULT IN productController.cs
+            $.ajax({
+                url: '/Products/Edit',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: { "id": productId },
+                success: function (data) {
+                    console.log(data);
+
+                    @*
+                        id="editProduct_Name"
+                        id="editProduct_Brand"
+                    id = "editProduct_Category"
+                    id = "editProduct_Year"
+                    id = "editProduct_Year"
+                    id = "editProduct_Price" *@
+
+                    //AJAX - POPULATE MODAL DATA
+                    //MODAL TITLE modalTitleEditProduct
+                    $('#modalTitleEditProduct').text("Edit Product - " + data.product.product_name);
+
+                    //MODAL BODY
+                    //POPULATE PRODUCT NAME editProduct_Name
+                    $('#editProduct_Name').val(data.product.product_name);
+
+                    //POPULATE DROPDOWN OF BRAND LIST
+                    var brandHTML = "";
+                    for (i = 0; i < data.product.brands.length; i++) {
+                        brandHTML += "<option value='" + data.product.brands[i].brand_id + "'>" + data.product.brands[i].brand_name + "</option>";
+                    }
+                    $('#editProduct_Brand').append(brandHTML);
+
+                    //POPULATE DROPDOWN OF CATEGORY LIST
+                    var categoryHTML = "";
+                    for (i = 0; i < data.product.categories.length; i++) {
+                        categoryHTML += "<option value='" + data.product.categories[i].category_id + "'>" + data.product.categories[i].category_name + "</option>";
+                    }
+                    $('#editProduct_Category').append(categoryHTML);
+
+                    //ASSIGN SELECTED BRAND OPTION
+                    $("#editProduct_Brand").val(data.product.brand_id).attr("selected", "selected");
+
+                    //ASSIGN SELECTED CATEGORY OPTION
+                    $("#editProduct_Category").val(data.product.category_id).attr("selected", "selected");
+
+                    //POPULATE MODEL YEAR
+                    $('#editProduct_Year').val(data.product.model_year);
+
+                    //POPULATE LIST PRICE
+                    $('#editProduct_Price').val(data.product.list_price);
+
+                    //DISPLAY MODAL
+                    $('#modalEditProduct').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        };
+    </script>
+}
