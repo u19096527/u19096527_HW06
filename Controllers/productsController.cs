@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using u19096527_HW06.Models;
+using PagedList;
 
 namespace u19096527_HW06.Controllers
 {
