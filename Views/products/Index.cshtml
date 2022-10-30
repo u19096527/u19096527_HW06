@@ -80,7 +80,7 @@
 <!-- PAGINATION -->
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("Index", 
+@Html.PagedListPager(Model, page => Url.Action("Index",
     new { page, currentFilter = ViewBag.CurrentFilter }))
 
 <!-- MODAL SECTION -->
@@ -149,7 +149,7 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="saveNewProductInfo()">Save changes</button>
             </div>
         </div>
     </div>
@@ -163,64 +163,64 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h2 class="modal-title" id="modalTitleDisplayDetails"></h2>
             </div>
             <div class="modal-body">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12" style="width: 72% !important;">
-                            <div class="form-horizontal ">
-                                <div class="form-group">
-                                    <label class="control-label col-md-2"> Name </label>
-                                    <br />
-                                    <div class="col-md-10">
-                                        <input placeholder="Product Name" type="text" class="form-control" id="editProduct_Name" />
-                                        <span id="nameRequired" hidden class="text-danger"> PLEASE FILL IN THE PRODUCT NAME ! </span>
-                                    </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-2"> Brand </label>
-                                    <br />
-                                    <div class="col-md-10">
-                                        <select class="form-control" id="editProduct_Brand"></select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label col-md-2"> Category </label>
-                                    <br />
-                                    <div class="col-md-10">
-                                        <select class="form-control" id="editProduct_Category"></select>
-                                    </div>
-                                </div>
+                <h2>Details</h2>
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-2">Year</label>
-                                    <br />
-                                    <div class="col-md-10">
-                                        <input placeholder="2022" type="text" class="form-control" id="editProduct_Year" />
-                                        <span id="yearInvalid" hidden class="text-danger"> MODEL YEAR ENTERED IS INVALID! </span>
-                                        <span id="yearRequired" hidden class="text-danger"> PLEASE FILL IN THE MODEL YEAR ! </span>
-                                    </div>
-                                </div>
+                <div>
+                    <hr />
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Name
+                        </dt>
 
-                                <div class="form-group">
-                                    <label class="control-label col-md-2">List Price</label>
-                                    <br />
-                                    <div class="col-md-10">
-                                        <input placeholder="2500" type="text" class="form-control" id="editProduct_Price" />
-                                        <span id="priceInvalid" hidden class="text-danger"> PRICE ENTERED IS INVALID ! </span>
-                                        <span id="priceRequired" hidden class="text-danger">PLEASE FILL IN THE LIST PRICE ! </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                        <dd>
+                            <span id="modalDetails_productName"></span>
+                        </dd>
+
+                        <dt>
+                            Year
+                        </dt>
+
+                        <dd>
+                            <span id="modalDetails_modelYear"></span>
+                        </dd>
+
+                        <dt>
+                            Price
+                        </dt>
+
+                        <dd>
+                            <span id="modalDetails_listPrice"></span>
+                        </dd>
+
+                        <dt>
+                            Brand
+                        </dt>
+
+                        <dd>
+                            <span id="modalDetails_brandName"></span>
+                        </dd>
+
+                        <dt>
+                            Category
+                        </dt>
+
+                        <dd>
+                            <span id="modalDetails_category"></span>
+                        </dd>
+                    </dl>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="">Save changes</button>
+                <table id="tblSimpleAttribute" class="table table-bordered table-striped table-responsive table-hover">
+                    <thead>
+                        <tr>
+                            <th align="left" class="productth col-md-6"> Store </th>
+                            <th align="left" class="productth col-md-6"> Quantity </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -296,8 +296,6 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 
         function displaySelectedProductInfo() { };
 
-
         function DeleteSelectedProduct() { };
-
-        </script>
-    }
+    </script>
+}
