@@ -1,18 +1,19 @@
-﻿@model IEnumerable<u19096527_HW06.Models.product>
+﻿@model PagedList.IPagedList<u19096527_HW06.Models.product>
+@using PagedList.Mvc;
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Products";
 }
 
 <h2> Products </h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Index", "Products", FormMethod.Get))
 {
-<div>
-    @Html.TextBox("SearchString")
-    <button type="submit" value="btn btn-primary"> Search </button>
-    <button type="button" value="btn btn-info" onclick="wondow.location.href = '@Url.Action("Products","Create")'"> Create </button>
-</div>
+    <div>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <button type="submit" value="btn btn-primary"> Search </button>
+        <button type="button" value="btn btn-info" onclick="wondow.location.href = '@Url.Action("Products","Create")'"> Create </button>
+    </div>
 
 }
 
@@ -58,11 +59,17 @@
                 @Html.DisplayFor(modelItem => item.category.category_name)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.product_id }, new { @class = "btn btn-primary"}) |
+                @Html.ActionLink("Edit", "Edit", new { id = item.product_id }, new { @class = "btn btn-primary" }) |
                 @Html.ActionLink("Details", "Details", new { id = item.product_id }, new { @class = "btn btn-info" }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.product_id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }
-
 </table>
+
+<br />
+
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, currentFilter = ViewBag.CurrentFilter }))

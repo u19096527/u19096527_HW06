@@ -36,7 +36,7 @@ namespace u19096527_HW06.Controllers
                 products = products.Where( p => p.product_name.Contains(searchString) );
             }
 
-            int pageSize = 10;
+            int pageSize = 10;// number of rows displayed in view
             int pageNumber = (page ?? 1);
 
             return View(products.ToList().ToPagedList(pageNumber, pageSize));
