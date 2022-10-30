@@ -87,13 +87,13 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
 <!-- MODAL SECTION -->
 <!-- MODAL : EDIT PRODUCT --> 
 <div class="modal fade" id="modalEditProduct" tabindex="-1" role="dialog" aria-labelledby="modalLabelEditProduct" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleEditProduct"></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h2 class="modal-title" id="modalTitleEditProduct"></h2>
             </div>
             <div class="modal-body">
                 <div class="container">
@@ -164,12 +164,8 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
         $(document).ready(function () {
         });
 
-        function editSelectedProduct(productId) {
-
-        };
-
         var iSelectedProductID = 0;
-        function getProductEdit(productId) {
+        function editSelectedProduct(productId) {
             iSelectedProductID = 0;
             iSelectedProductID = productId;
 
@@ -186,32 +182,31 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
                     @*
                         id="editProduct_Name"
                         id="editProduct_Brand"
-                    id = "editProduct_Category"
-                    id = "editProduct_Year"
-                    id = "editProduct_Year"
-                    id = "editProduct_Price" *@
+                        id = "editProduct_Category"
+                        id = "editProduct_Year"
+                        id = "editProduct_Price" *@
 
                     //AJAX - POPULATE MODAL DATA
                     //MODAL TITLE modalTitleEditProduct
-                    $('#modalTitleEditProduct').text("Edit Product - " + data.product.product_name);
+                    $('#modalTitleEditProduct').text("Edit Product");
 
                     //MODAL BODY
                     //POPULATE PRODUCT NAME editProduct_Name
                     $('#editProduct_Name').val(data.product.product_name);
 
                     //POPULATE DROPDOWN OF BRAND LIST
-                    var brandHTML = "";
+                    var brands_innerHTML = "";
                     for (i = 0; i < data.product.brands.length; i++) {
-                        brandHTML += "<option value='" + data.product.brands[i].brand_id + "'>" + data.product.brands[i].brand_name + "</option>";
+                        brands_innerHTML += "<option value='" + data.product.brands[i].brand_id + "'>" + data.product.brands[i].brand_name + "</option>";
                     }
-                    $('#editProduct_Brand').append(brandHTML);
+                    $('#editProduct_Brand').append(brands_innerHTML);
 
                     //POPULATE DROPDOWN OF CATEGORY LIST
-                    var categoryHTML = "";
+                    var categories_innerHTML = "";
                     for (i = 0; i < data.product.categories.length; i++) {
-                        categoryHTML += "<option value='" + data.product.categories[i].category_id + "'>" + data.product.categories[i].category_name + "</option>";
+                        categories_innerHTML += "<option value='" + data.product.categories[i].category_id + "'>" + data.product.categories[i].category_name + "</option>";
                     }
-                    $('#editProduct_Category').append(categoryHTML);
+                    $('#editProduct_Category').append(categories_innerHTML);
 
                     //ASSIGN SELECTED BRAND OPTION
                     $("#editProduct_Brand").val(data.product.brand_id).attr("selected", "selected");
