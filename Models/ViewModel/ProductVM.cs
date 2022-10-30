@@ -7,7 +7,7 @@ namespace u19096527_HW06.Models.ViewModel
 {
     public class ProductVM
     {
-        public
-        public 
+        public string brandName { get; set; }
+        public string category { get; set; }
     }
 }
