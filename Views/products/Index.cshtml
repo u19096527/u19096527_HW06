@@ -292,9 +292,136 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
             });
         };
 
-        function saveNewProductInfo() { };
+        function saveNewProductInfo() {
+            //model definition
+            product = new class {
+                product_id = iSelectedProductID; product_name = $('#editProduct_Name').val(); brand_id = parseInt($('#editProduct_Brand').val());
+                category_id = parseInt($("#editProduct_Category").val()); model_year = $('#editProduct_Year').val(); list_price = 0
+            };
 
-        function displaySelectedProductInfo() { };
+            //VALIDATION - IF NAME FIELD IS EMPTY THEN...
+            if (product.product_name == "") {
+                $("#nameRequired").attr("hidden", false);
+                return;
+            }
+            $("#nameRequired").attr("hidden", true);
+
+            //VALIDATION - YEAR FIELD
+            if (product.model_year != "") {
+                $("#yearRequired").attr("hidden", true);
+
+                if (isNaN(product.model_year) == true) {
+                    $("#yearInvalid").attr("hidden", false);
+                    return;
+                }
+                else if (isNaN(product.model_year) == false && product.model_year.length > 4 || product.model_year.length < 4) {
+                    $("#yearInvalid").attr("hidden", false);
+                    return;
+                }
+            }
+            else {
+                $("#yearInvalid").attr("hidden", true);
+                $("#yearRequired").attr("hidden", false);
+                return;
+            }
+            $("#yearInvalid").attr("hidden", true);
+            $("#yearRequired").attr("hidden", true);
+
+            @*// modalEditProduct, modalLabelEditProduct | 
+                variables editProduct_Name editProduct_Brand editProduct_Category 
+                editProduct_Year, editProduct_Price *@
+
+            //VALIDATION - LIST PRICE
+            if ($('#editProduct_Price').val() != "") {
+                $("#priceRequired").attr("hidden", true);
+                if (isNaN($('#editProduct_Price').val()) == true) {
+                    $("#priceInvalid").attr("hidden", false);
+                    return;
+                }
+            }
+            else {
+                $("#priceInvalid").attr("hidden", true);
+                $("#priceRequired").attr("hidden", false);
+                return;
+            }
+            $("#priceInvalid").attr("hidden", true);
+            $("#priceRequired").attr("hidden", true);
+
+            //CONVERT VALUES FOR HTML
+            product.list_price = parseFloat($('#editProduct_Price').val());
+            product.model_year = parseInt($('#editProduct_Year').val());
+
+            //Ajax Send Data
+            $.ajax({
+                url: '/Products/Edit',
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ "product": product }),
+                success: function (data) {
+                    if (data.status == "SUCCESS") {
+                        alert("Product changes saved successfully!");
+                        location.reload();
+                    }
+                    else {
+                        alert(data.status);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            //----------------------------------------------------
+        };
+
+        function displaySelectedProductInfo(productId) {
+            $.ajax({
+                url: '/Products/Details/',
+                type: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                data: { "id": productId },
+                success: function (data) {
+                    //< !--modalDetails_productName modalDetails_modelYear modalDetails_listPrice modalDetails_brandName modalDetails_category-- >
+
+                    $('#modalDetails_productName').text('');
+                    $('#modalDetails_modelYear').text('');
+                    $('#modalDetails_listPrice').text('');
+                    $('#modalDetails_brandName').text('');
+                    $('#modalDetails_category').text('');
+
+                    $('#modalDetails_productName').text(data.product.brand_name);
+                    $('#modalDetails_modelYear').text(data.product.category_name);
+                    $('#modalDetails_listPrice').text(data.product.list_price);
+                    $('#modalDetails_brandName').text(data.product.model_year);
+                    $('#modalDetails_category').text(data.product.product_name);
+
+
+                    $('#tblSimpleAttribute tbody').empty();
+                    var rows = ''
+                    $.each(data.product.storeQuantities, function (i, item) {
+                        let showQuantity = item.quantity;
+                        let Quantity = "";
+                        if (showQuantity == "0") {
+                            Quantity = "<span class='text-danger'> Out of Stock </span>"
+                        }
+                        else {
+                            Quantity = item.quantity
+                        }
+                        var line = "<tr>" + "<td>" + item.store_name + "</td>" + "<td>" + item.quantity + "</td>" + "</tr > ";
+                        rows += line;
+                    });
+                    $('#tblSimpleAttribute tbody').append(rows);
+
+
+                    $('#modalDisplayDetails').modal('show');
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            //----------------------------------------------------
+        };
 
         function DeleteSelectedProduct() { };
     </script>

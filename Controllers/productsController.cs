@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using u19096527_HW06.Models;
+using u19096527_HW06.Models.ViewModel;
 using PagedList;
 
 namespace u19096527_HW06.Controllers
@@ -43,18 +44,26 @@ namespace u19096527_HW06.Controllers
         }
 
         // GET: products/Details/5
-        public ActionResult Details(int? id)
+        public JsonResult Details(int? id)
         {
-            if (id == null)
+            product prodInDb = db.products.Where(x => x.product_id == id).FirstOrDefault();
+            DetailsVM newProd = new DetailsVM();
+            newProd.product_name = prodInDb.product_name;
+            newProd.model_year = prodInDb.model_year;
+            newProd.list_price = prodInDb.list_price;
+            newProd.brand_name = prodInDb.brand.brand_name;
+            newProd.category_name = prodInDb.category.category_name;
+            newProd.storeQuantities = (
+            from stock in db.stocks.ToList()
+            join store in db.stores.ToList() on stock.store_id equals store.store_id
+            where stock.product_id == id
+            group stock by stock.store.store_name into groupedStores
+            select new StoreQuantityVM
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            product product = db.products.Find(id);
-            if (product == null)
-            {
-                return HttpNotFound();
-            }
-            return View(product);
+                store_name = groupedStores.Key,
+                quantity = (int)groupedStores.Sum(oi => oi.quantity)
+            }).ToList();
+            return new JsonResult { Data = new { product = newProd }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
         }
 
         // GET: products/Create

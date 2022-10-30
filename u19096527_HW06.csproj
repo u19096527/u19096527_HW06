@@ -180,7 +180,9 @@
     <Compile Include="Models\store.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModel\DetailsVM.cs" />
     <Compile Include="Models\ViewModel\ProductVM.cs" />
+    <Compile Include="Models\ViewModel\StoreQuantityVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
