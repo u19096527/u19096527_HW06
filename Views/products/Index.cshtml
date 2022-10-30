@@ -58,9 +58,9 @@
                 @Html.DisplayFor(modelItem => item.category.category_name)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.product_id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.product_id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.product_id })
+                @Html.ActionLink("Edit", "Edit", new { id = item.product_id }, new { @class = "btn btn-primary"}) |
+                @Html.ActionLink("Details", "Details", new { id = item.product_id }, new { @class = "btn btn-info" }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.product_id }, new { @class = "btn btn-danger" })
             </td>
         </tr>
     }
