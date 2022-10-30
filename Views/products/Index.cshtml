@@ -26,7 +26,6 @@
         </div>
     </div>
 }
-
 <br />
 
 <table class="table table-striped">
@@ -68,7 +67,7 @@
                 @Html.DisplayFor(modelItem => item.category.category_name)
             </td>
             <td>
-                <button class="btn btn-primary" onclick="editSelectedProduct(@item.product_id)"> Edit</button>
+                <button class="btn btn-primary" onclick="editSelectedProductInfo(@item.product_id)"> Edit</button>
                 <button class="btn btn-info"> Details</button>
                 <button class="btn btn-danger"> Delete</button>
             </td>
@@ -81,11 +80,11 @@
 <!-- PAGINATION -->
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("Index",
+@Html.PagedListPager(Model, page => Url.Action("Index", 
     new { page, currentFilter = ViewBag.CurrentFilter }))
 
 <!-- MODAL SECTION -->
-<!-- MODAL : EDIT PRODUCT --> 
+<!-- MODAL : EDIT PRODUCT -->
 <div class="modal fade" id="modalEditProduct" tabindex="-1" role="dialog" aria-labelledby="modalLabelEditProduct" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -131,7 +130,6 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
                                         <input placeholder="2022" type="text" class="form-control" id="editProduct_Year" />
                                         <span id="yearInvalid" hidden class="text-danger"> MODEL YEAR ENTERED IS INVALID! </span>
                                         <span id="yearRequired" hidden class="text-danger"> PLEASE FILL IN THE MODEL YEAR ! </span>
-
                                     </div>
                                 </div>
 
@@ -142,7 +140,6 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
                                         <input placeholder="2500" type="text" class="form-control" id="editProduct_Price" />
                                         <span id="priceInvalid" hidden class="text-danger"> PRICE ENTERED IS INVALID ! </span>
                                         <span id="priceRequired" hidden class="text-danger">PLEASE FILL IN THE LIST PRICE ! </span>
-
                                     </div>
                                 </div>
                             </div>
@@ -152,20 +149,93 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="postProductEdit()">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="">Save changes</button>
             </div>
         </div>
     </div>
 </div>
+
 <!-- MODAL : DISPLAY PRODUCT DETAILS -->
+<div class="modal fade" id="modalDisplayDetails" tabindex="-1" role="dialog" aria-labelledby="modalLabelDisplayDetails" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h2 class="modal-title" id="modalTitleDisplayDetails"></h2>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12" style="width: 72% !important;">
+                            <div class="form-horizontal ">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2"> Name </label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <input placeholder="Product Name" type="text" class="form-control" id="editProduct_Name" />
+                                        <span id="nameRequired" hidden class="text-danger"> PLEASE FILL IN THE PRODUCT NAME ! </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2"> Brand </label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="editProduct_Brand"></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-2"> Category </label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <select class="form-control" id="editProduct_Category"></select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">Year</label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <input placeholder="2022" type="text" class="form-control" id="editProduct_Year" />
+                                        <span id="yearInvalid" hidden class="text-danger"> MODEL YEAR ENTERED IS INVALID! </span>
+                                        <span id="yearRequired" hidden class="text-danger"> PLEASE FILL IN THE MODEL YEAR ! </span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">List Price</label>
+                                    <br />
+                                    <div class="col-md-10">
+                                        <input placeholder="2500" type="text" class="form-control" id="editProduct_Price" />
+                                        <span id="priceInvalid" hidden class="text-danger"> PRICE ENTERED IS INVALID ! </span>
+                                        <span id="priceRequired" hidden class="text-danger">PLEASE FILL IN THE LIST PRICE ! </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- SCRIPT SECTION -->
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
+
         });
 
         var iSelectedProductID = 0;
-        function editSelectedProduct(productId) {
+        function editSelectedProductInfo(productId) {
             iSelectedProductID = 0;
             iSelectedProductID = productId;
 
@@ -178,13 +248,6 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
                 data: { "id": productId },
                 success: function (data) {
                     console.log(data);
-
-                    @*
-                        id="editProduct_Name"
-                        id="editProduct_Brand"
-                        id = "editProduct_Category"
-                        id = "editProduct_Year"
-                        id = "editProduct_Price" *@
 
                     //AJAX - POPULATE MODAL DATA
                     //MODAL TITLE modalTitleEditProduct
@@ -228,5 +291,13 @@ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.Page
                 }
             });
         };
-    </script>
-}
+
+        function saveNewProductInfo() { };
+
+        function displaySelectedProductInfo() { };
+
+
+        function DeleteSelectedProduct() { };
+
+        </script>
+    }
